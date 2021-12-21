@@ -111,4 +111,11 @@ venv.bak/
 *.lock
 *.whl
 *.exe
+*.txt
+*.png
+*.jpg
+*.sample
+Procfile
+Aptfile
+Pipfile
 Pipfile
