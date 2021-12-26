@@ -118,3 +118,6 @@ venv.bak/
 Procfile
 Aptfile
 Pipfile
+.vs/LINE_BOT/v17/.suo
+.vs/slnx.sqlite
+.vs/slnx.sqlite-journal
