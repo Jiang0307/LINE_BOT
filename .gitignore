@@ -108,16 +108,3 @@ venv.bak/
 
 # vscode
 .vscode/
-*.lock
-*.whl
-*.exe
-*.txt
-*.png
-*.jpg
-*.sample
-Procfile
-Aptfile
-Pipfile
-.vs/LINE_BOT/v17/.suo
-.vs/slnx.sqlite
-.vs/slnx.sqlite-journal
