@@ -1,7 +1,6 @@
-from re import U
 from library import *
-from app import *
 
+dict_ch_en = {}
 champion_name = ""
 current_lane = ""
 current_tier = 0
@@ -10,6 +9,8 @@ current_name_matchup = ""
 matchup_list = []
 
 def create_dictionary():
+    opgg_url = "https://tw.op.gg/champion/statistics"
+    X_PATH =  '//div[@class="champion-index__champion-list"]//div[@data-champion-name and @data-champion-key]'
     webpage = requests.get(OPGG_URL, headers=HEADERS)
     soup = BeautifulSoup(webpage.content, "html.parser")
     dom = etree.HTML(str(soup))

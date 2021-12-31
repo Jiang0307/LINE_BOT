@@ -1,12 +1,8 @@
 from library import *
 from fsm import TocMachine
 
+chromedriver_autoinstaller.install()
 load_dotenv()
-PWD = os.path.dirname(__file__)
-HEADERS = {"User-Agent": "Chrome/70.0.3538.25" , "Accept-Language":"zh-TW,zh;q=0.9"}
-OPGG_URL = "https://tw.op.gg/champion/statistics"
-X_PATH =  '//div[@class="champion-index__champion-list"]//div[@data-champion-name and @data-champion-key]'
-dict_ch_en = {}
 
 machine = TocMachine(
     states = ["user","menu","feature","input_name","select_service","send_image","opgg_url","story_url","input_lane","input_tier","select_info","win_rate","pick_rate","input_lane_matchup","input_name_matchup","matchup_winrate"],
@@ -159,33 +155,33 @@ def callback():
 
     return "OK"
 
-# @app.route("/webhook", methods=["POST"])
-# def webhook_handler():
-#     signature = request.headers["X-Line-Signature"]
-#     # get request body as text
-#     body = request.get_data(as_text=True)
-#     app.logger.info(f"Request body: {body}")
+@app.route("/webhook", methods=["POST"])
+def webhook_handler():
+    signature = request.headers["X-Line-Signature"]
+    # get request body as text
+    body = request.get_data(as_text=True)
+    app.logger.info(f"Request body: {body}")
 
-#     # parse webhook body
-#     try:
-#         events = parser.parse(body, signature)
-#     except InvalidSignatureError:
-#         abort(400)
+    # parse webhook body
+    try:
+        events = parser.parse(body, signature)
+    except InvalidSignatureError:
+        abort(400)
 
-#     # if event is MessageEvent and message is TextMessage, then echo text
-#     for event in events:
-#         if not isinstance(event, MessageEvent):
-#             continue
-#         if not isinstance(event.message, TextMessage):
-#             continue
-#         if not isinstance(event.message.text, str):
-#             continue
-#         print(f"\nFSM STATE: {machine.state}")
-#         print(f"REQUEST BODY: \n{body}")
-#         response = machine.advance(event)
-#         if response == False:
-#             send_text_message(event.reply_token, "Not Entering any State")
-#     return "OK"
+    # if event is MessageEvent and message is TextMessage, then echo text
+    for event in events:
+        if not isinstance(event, MessageEvent):
+            continue
+        if not isinstance(event.message, TextMessage):
+            continue
+        if not isinstance(event.message.text, str):
+            continue
+        print(f"\nFSM STATE: {machine.state}")
+        print(f"REQUEST BODY: \n{body}")
+        response = machine.advance(event)
+        if response == False:
+            send_text_message(event.reply_token, "請輸入正確格式")
+    return "OK"
 
 @app.route("/show-fsm", methods=["GET"])
 def show_fsm():

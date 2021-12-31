@@ -1,10 +1,11 @@
+import chromedriver_autoinstaller
 import os
 import re
 import sys
 import requests
-import webbrowser
 import message_template
 
+from re import *
 from bs4 import BeautifulSoup
 from transitions.extensions import GraphMachine
 from lxml import etree
