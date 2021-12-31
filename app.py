@@ -1,5 +1,13 @@
-from library import *
+import os
+import sys
+import chromedriver_autoinstaller
+from flask import Flask, jsonify, request, abort, send_file
+from dotenv import load_dotenv
+from linebot import LineBotApi, WebhookParser
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from fsm import TocMachine
+from utils import send_text_message
 
 chromedriver_autoinstaller.install()
 load_dotenv()
@@ -18,7 +26,7 @@ machine = TocMachine(
             "trigger": "advance",
             "source": "menu",
             "dest": "feature",
-            "conditions": "is_going_to_introdution",
+            "conditions": "is_going_to_feature",
         },
         {
             "trigger": "advance",

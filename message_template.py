@@ -1,118 +1,119 @@
 feature = {
-  "type": "bubble",
-  "hero": {
-    "type": "image",
-    "url": "https://cdn.icon-icons.com/icons2/916/PNG/512/Menu_icon_icon-icons.com_71858.png",
-    "size": "full",
-    "aspectRatio": "20:13",
-    "aspectMode": "cover",
-    "action": {
-      "type": "uri",
-      "uri": "http://linecorp.com/"
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "hero": {
+        "type": "image",
+        "url": "https://i.imgur.com/lFq9NTg.jpg",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1.25:1"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "介紹與說明",
+              "text": "功能介紹與說明"
+            },
+            "height": "md",
+            "color": "#ff9900",
+            "style": "primary"
+          }
+        ],
+        "spacing": "lg"
+      }
     },
-    "offsetTop": "xxl"
-  },
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "text",
-        "text": "OPTIONS",
-        "weight": "bold",
-        "size": "3xl",
-        "align": "center",
-        "offsetEnd": "none",
-        "offsetStart": "none",
-        "offsetBottom": "md"
+    {
+      "type": "bubble",
+      "hero": {
+        "type": "image",
+        "url": "https://i.imgur.com/V2tkpQb.png",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1.25:1"
       },
-      {
-        "type": "separator"
-      },
-      {
+      "footer": {
         "type": "box",
-        "layout": "baseline",
-        "spacing": "sm",
+        "layout": "vertical",
         "contents": [
           {
-            "type": "text",
-            "text": "依照階級查詢",
-            "color": "#aaaaaa",
-            "size": "sm",
-            "flex": 3
-          },
-          {
-            "type": "text",
-            "text": "Search by tier",
-            "wrap": True,
-            "color": "#666666",
-            "size": "sm",
-            "flex": 5
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "即時查詢",
+              "text": "查詢即時匯率"
+            },
+            "height": "md",
+            "color": "#ff6666",
+            "style": "primary"
           }
         ],
-        "margin": "sm"
-      },
-      {
-        "type": "box",
-        "layout": "baseline",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "text",
-            "text": "依照英雄查詢",
-            "color": "#aaaaaa",
-            "size": "sm",
-            "flex": 3
-          },
-          {
-            "type": "text",
-            "text": "Search by champion",
-            "wrap": True,
-            "color": "#666666",
-            "size": "sm",
-            "flex": 5
-          }
-        ],
-        "margin": "sm"
-      },
-      {
-        "type": "box",
-        "layout": "baseline",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "text",
-            "text": "依照對抗查詢",
-            "color": "#aaaaaa",
-            "size": "sm",
-            "flex": 3
-          },
-          {
-            "type": "text",
-            "text": "Search by matchup",
-            "wrap": True,
-            "color": "#666666",
-            "size": "sm",
-            "flex": 5
-          }
-        ],
-        "margin": "sm"
+        "spacing": "lg"
       }
-    ],
-    "offsetBottom": "none"
-  },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "spacing": "sm",
-    "contents": [
-      {
-        "type": "spacer",
-        "size": "sm"
+    },
+    {
+      "type": "bubble",
+      "hero": {
+        "type": "image",
+        "url": "https://i.imgur.com/nQaCDXh.png",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1.25:1"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "近期趨勢圖",
+              "text": "查詢趨勢走向"
+            },
+            "height": "md",
+            "color": "#ff66b3",
+            "style": "primary"
+          }
+        ],
+        "spacing": "lg"
       }
-    ],
-    "flex": 0
-  }
+    },
+    {
+      "type": "bubble",
+      "hero": {
+        "type": "image",
+        "url": "https://i.imgur.com/UrSkoW4.png",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1.25:1"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "推薦與否",
+              "text": "是否推薦兌幣"
+            },
+            "height": "md",
+            "color": "#b366ff",
+            "style": "primary"
+          }
+        ],
+        "spacing": "lg"
+      }
+    }
+  ]
 }
 #============================================================================================
 service = {

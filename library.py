@@ -22,4 +22,3 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 from fsm import TocMachine
-from utils import *

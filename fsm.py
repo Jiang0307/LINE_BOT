@@ -1,4 +1,23 @@
-from library import *
+import os
+import sys
+import message_template
+import requests
+from lxml import etree
+from PIL import Image
+from pyquery import PyQuery
+from flask import Flask, jsonify, request, abort, send_file
+from dotenv import load_dotenv
+from linebot import LineBotApi, WebhookParser
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
+from transitions.extensions import GraphMachine
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.support import ui
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from utils import send_text_message , send_image_message
+
 
 dict_ch_en = {}
 champion_name = ""
@@ -333,7 +352,7 @@ class TocMachine(GraphMachine):
 #=======================================ON ENTER=======================================
 
     def on_enter_menu(self , event):
-        print("enter menu")
+        print("enter menu !!!\n")
         global champion_name,current_lane,current_tier,current_lane_matchup,current_name_matchup,matchup_list
         champion_name = ""
         current_lane = ""
@@ -345,21 +364,20 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, "進入選單")
 
     def on_enter_feature(self , event):
-        print("enter feature")
-        reply_token = event.reply_token
+        print("enter feature !!!\n")
         message = message_template.feature
-        message_to_reply = FlexSendMessage("選擇項目", message)
+        message_to_reply = FlexSendMessage("功能介紹與說明", message)
         line_bot_api = LineBotApi( os.getenv('LINE_CHANNEL_ACCESS_TOKEN') )
         line_bot_api.reply_message(reply_token, message_to_reply)
         self.go_back()
 
     def on_enter_input_name(self , event):
-        print("enter input name")
+        print("enter input name !!!\n")
         reply_token = event.reply_token
         send_text_message(reply_token, "請輸入英雄中文名稱")
         
     def on_enter_select_service(self , event):
-        print("enter select service")
+        print("enter select service !!!\n")
         reply_token = event.reply_token
         message = message_template.service
         message_to_reply = FlexSendMessage("選擇項目", message)
@@ -368,7 +386,7 @@ class TocMachine(GraphMachine):
         
     def on_enter_send_image(self , event):
         global champion_name
-        print(f"enter send message , champion : {champion_name}")
+        print(f"enter send message , champion : {champion_name} !!!\n")
         reply_token = event.reply_token
         url = get_image_url(champion_name)
         send_image_message(reply_token , url)
@@ -376,7 +394,7 @@ class TocMachine(GraphMachine):
 
     def on_enter_opgg_url(self , event):
         global champion_name
-        print(f"enter opgg_url , champion : {champion_name}")
+        print(f"enter opgg_url , champion : {champion_name} !!!\n")
         reply_token = event.reply_token
         url = get_opgg_url(champion_name)
         send_text_message(reply_token , url)
@@ -384,24 +402,24 @@ class TocMachine(GraphMachine):
         
     def on_enter_story_url(self , event):
         global champion_name
-        print(f"enter opgg_url , champion : {champion_name}")        
+        print(f"enter opgg_url , champion : {champion_name} !!!\n")        
         reply_token = event.reply_token
         url = get_story_url(champion_name)
         send_text_message(reply_token , url)
         self.go_back()
 
     def on_enter_input_lane(self , event):
-        print("enter input lane")        
+        print("enter input lane !!!\n")        
         reply_token = event.reply_token
         send_text_message(reply_token , "請輸入路線")
         
     def on_enter_input_tier(self , event):
-        print("enter input tier")        
+        print("enter input tier !!!\n")        
         reply_token = event.reply_token
         send_text_message(reply_token , "請輸入階級")
     
     def on_enter_input_select_info(self , event):
-        print("enter select info")
+        print("enter select info !!!\n")
         reply_token = event.reply_token
         message = message_template.info
         message_to_reply = FlexSendMessage("選擇項目", message)
@@ -409,14 +427,14 @@ class TocMachine(GraphMachine):
         line_bot_api.reply_message(reply_token, message_to_reply)
 
     def on_enter_win_rate(self , event):
-        print("enter win rate")
+        print("enter win rate !!!\n")
         reply_token = event.reply_token
         ret = get_win_rate(current_tier , current_lane)
         send_text_message(reply_token , ret)
         self.go_back()
         
     def on_enter_pick_rate(self , event):
-        print("enter pick rate")
+        print("enter pick rate !!!\n")
         reply_token = event.reply_token
         ret = get_pick_rate(current_tier , current_lane)
         send_text_message(reply_token , ret)
@@ -424,17 +442,17 @@ class TocMachine(GraphMachine):
         
 # states = ["input_lane_matchup","input_name_matchup","matchup_winrate"]
     def on_enter_input_lane_matchup(self , event):
-        print("on enter input lane matchup")
+        print("on enter input lane matchup !!!\n")
         reply_token = event.reply_token
         send_text_message(reply_token , "請輸入路線")
     
     def on_enter_input_name_matchup(self , event):
-        print("enter input name matchup")
+        print("enter input name matchup !!!\n")
         reply_token = event.reply_token
         send_text_message(reply_token, "請輸入英雄中文名稱")
         
     def on_enter_matchup_winrate(self , event):
-        print("enter matchup winrate")
+        print("enter matchup winrate !!!\n")
         reply_token = event.reply_token
         ret = get_matchup_winrate()
         send_text_message(reply_token , ret)
