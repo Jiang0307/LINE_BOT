@@ -2,6 +2,7 @@ import os
 import sys
 import message_template
 import requests
+import re
 from lxml import etree
 from PIL import Image
 from pyquery import PyQuery
@@ -365,6 +366,7 @@ class TocMachine(GraphMachine):
 
     def on_enter_feature(self , event):
         print("enter feature !!!\n")
+        reply_token = event.reply_token
         message = message_template.feature
         message_to_reply = FlexSendMessage("功能介紹與說明", message)
         line_bot_api = LineBotApi( os.getenv('LINE_CHANNEL_ACCESS_TOKEN') )
