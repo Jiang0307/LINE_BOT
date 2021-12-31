@@ -18,9 +18,8 @@ from selenium.webdriver.support import ui
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from utils import send_text_message , send_image_message
+from library import dict_ch_en , create_dictionary
 
-
-dict_ch_en = {}
 champion_name = ""
 current_lane = ""
 current_tier = 0
@@ -28,39 +27,18 @@ current_lane_matchup = ""
 current_name_matchup = ""
 matchup_list = []
 
-def create_dictionary():
-    opgg_url = "https://tw.op.gg/champion/statistics"
-    X_PATH =  '//div[@class="champion-index__champion-list"]//div[@data-champion-name and @data-champion-key]'
-    webpage = requests.get(OPGG_URL, headers=HEADERS)
-    soup = BeautifulSoup(webpage.content, "html.parser")
-    dom = etree.HTML(str(soup))
-    champ_list = dom.xpath(X_PATH)
-    champ_count =  len(champ_list)
-    for i in range(champ_count):
-        chinese = champ_list[i].get("data-champion-name")
-        english = champ_list[i].get("data-champion-key")
-        english = english.capitalize()
-        dict_ch_en[chinese] = english
-        #dict_en_ch[english] = chinese
-    dict_ch_en["翱銳龍獸"]="AurelionSol";dict_ch_en["蒙多醫生"]="DrMundo";dict_ch_en["寇格魔"]="KogMaw";dict_ch_en["李星"]="LeeSin";dict_ch_en["易大師"]="MasterYi";dict_ch_en["好運姐"]="MissFortune";dict_ch_en["雷珂煞"]="RekSai";dict_ch_en["貪啃奇"]="TahmKench";dict_ch_en["逆命"]="TwistedFate";dict_ch_en["趙信"]="XinZhao";
-    return
-  
 def is_chinese(strs):
-    strs = strs.rstrip()
     for _char in strs:
         if not '\u4e00' <= _char <= '\u9fa5':
             return False
     return True
   
 def check_input_name(name):
-    name = name.rstrip()
-    for key,value in dict_ch_en.items():
-        if name == key:
-            return True
+    if name in dict_ch_en.keys():
+        return True
     return False
 
 def check_input_lane(position):
-    position = position.rstrip()
     if (position=="上") or (position=="上路") or (position=="上單") or (position=="TOP") or (position=="top") or (position=="Top"):
         return True , "TOP"
     elif (position=="野") or (position=="打野") or (position=="JG") or (position=="JUNGLE") or (position=="jungle") or (position=="Jungle"):
@@ -74,7 +52,6 @@ def check_input_lane(position):
     return False , None
 
 def check_input_tier(tier):
-    tier = tier.rstrip()
     if (tier=="T1") or (tier=="t1") or (tier=="1") or (tier=="TIER 1") or (tier=="tier 1") or (tier=="Tier 1"):
         return True , "T1"
     elif (tier=="T2") or (tier=="t2") or (tier=="2") or (tier=="TIER 2") or (tier=="tier 2") or (tier=="Tier 2"):
@@ -84,14 +61,13 @@ def check_input_tier(tier):
     elif (tier=="T4") or (tier=="t4") or (tier=="4") or (tier=="TIER 4") or (tier=="tier 4") or (tier=="Tier 4"):
         return True , "T4"
     elif (tier=="T5") or (tier=="t5") or (tier=="5") or (tier=="TIER 5") or (tier=="tier 5") or (tier=="Tier 5"):
-        return True , "T"
+        return True , "T5"
     return False , None
 
-def craw_matchup(lane , champion):
-    lane = lane.rstrip()
-    champion = champion.rstrip()
-    wait_time = 1
+def crawl_matchup(lane , champion):
+    wait_time = 5
     url = f"https://www.op.gg/champion/{champion}/statistics/{lane}/matchup"
+    print(f"URL = {url}")
     option = Options()
     option.add_argument("--headless")
     option.add_argument('--disable-gpu') #關閉GPU 避免某些系統或是網頁出錯
@@ -128,20 +104,17 @@ def craw_matchup(lane , champion):
         return False
 
 def get_image_url(champion):
-    champion = champion.rstrip()
     name = dict_ch_en[champion]
     img_url = f"https://ddragon.leagueoflegends.com/cdn/img/champion/splash/{name}_0.jpg"
     #img = Image.open(requests.get(img_url,stream=True).raw)
     return img_url
 
 def get_opgg_url(champion):
-    champion = champion.rstrip()
     name = dict_ch_en[champion]
     url = f"https://www.op.gg/champion/{name}/statistics/"
     return url
 
 def get_story_url(champion):
-    champion = champion.rstrip()
     base_url =  "https://universe.leagueoflegends.com/zh_TW/champion/"
     name = dict_ch_en[champion]
     result_url = base_url + name
@@ -157,31 +130,57 @@ def get_message(positions):
         yield{"name":name , "win_rate":win_rate , "pick_rate":pick_rate , "tier":tier}
 
 def get_win_rate(tier , lane):
-    header = {"User-Agent":"Chrome/96.0.4664.110" , "Accept-Language":"zh-TW,zh;q=0.9"} # configurations
-    html = requests.get("http://www.op.gg/champion/statistics",headers=header).text
+    HEADERS = {"User-Agent":"Chrome/96.0.4664.110" , "Accept-Language":"zh-TW,zh;q=0.9"} # configurations
+    html = requests.get("http://www.op.gg/champion/statistics",headers=HEADERS).text
     doc = PyQuery(html)
     tier = "tr"
-    return_message = ""
+    return_dict = {}
     for information in doc("tbody").items(): # 遍歷五個tbody節點，分別代表五個位置
         position = re.match("tabItem champion-trend-tier-(.*)",information.attr("class")).group(1) # 用regular expresion提取出tbody的class屬性的個位置
         if lane == position:
             for items in get_message(information.find(tier).items()): # 利用get_message函數，遍歷每一個tbody節點的tier節點
                 if items.get("tier") == "T1" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-                    return_message += temp 
+                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
+                    return_dict[items.get("name")] = temp
                 elif items.get("tier") == "T2" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-                    return_message += temp
+                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
+                    return_dict[items.get("name")] = temp
                 elif items.get("tier") == "T3" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-                    return_message += temp
+                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
+                    return_dict[items.get("name")] = temp
                 elif items.get("tier") == "T4" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-                    return_message += temp
+                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
+                    return_dict[items.get("name")] = temp
                 elif items.get("tier") == "T5" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-                    return_message += temp
-    return return_message
+                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
+                    return_dict[items.get("name")] = temp
+    print(return_dict  )
+    # header = {"User-Agent": "Chrome/96.0.4664.110" , "Accept-Language":"zh-TW,zh;q=0.9"} # configurations
+    # html = requests.get("http://www.op.gg/champion/statistics",headers=header).text
+    # doc = PyQuery(html)
+    # tier = "tr"
+    # return_message = ""
+    # for information in doc("tbody").items(): # 遍歷五個tbody節點，分別代表五個位置
+    #     position = re.match("tabItem champion-trend-tier-(.*)",information.attr("class")).group(1) # 用regular expresion提取出tbody的class屬性的個位置
+    #     if lane == position:
+    #         for items in get_message(information.find(tier).items()): # 利用get_message函數，遍歷每一個tbody節點的tier節點
+    #             if items.get("tier") == "T1" == tier:
+    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
+    #                 return_message += temp 
+    #             elif items.get("tier") == "T2" == tier:
+    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
+    #                 return_message += temp
+    #             elif items.get("tier") == "T3" == tier:
+    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
+    #                 return_message += temp
+    #             elif items.get("tier") == "T4" == tier:
+    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
+    #                 return_message += temp
+    #             elif items.get("tier") == "T5" == tier:
+    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
+    #                 return_message += temp
+    # print("MESSAGE : ",return_message)
+    # #return return_message
 
 def get_pick_rate(tier , lane):
     header = {"User-Agent":"Chrome/96.0.4664.110" , "Accept-Language":"zh-TW,zh;q=0.9"} # configurations
@@ -211,12 +210,13 @@ def get_pick_rate(tier , lane):
     return return_message 
 
 def get_matchup_winrate():
-    return_message = ""
+    return_message = f"{current_name_matchup}的對位勝率 : \n"
     for name , win_rate in matchup_list:
        temp = name + " : " + win_rate + "\n"
        return_message += temp
     return return_message
 
+create_dictionary()
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
         self.machine = GraphMachine(model=self, **machine_configs)
@@ -245,11 +245,14 @@ class TocMachine(GraphMachine):
     def is_going_to_select_service(self , event):
         global champion_name
         text = event.message.text
+        print(text)
         if is_chinese(text) == True:
             ret = check_input_name(text)    # 英雄名稱是否存在
             if ret == True:
+                print("TRUE!!!\n")
                 champion_name = text
             else:
+                print("FALSE!!!\n")
                 champion_name = ""            
             return ret
         else:        
@@ -291,9 +294,11 @@ class TocMachine(GraphMachine):
         ret , lane = check_input_lane(text)
         if ret == True: # 位置名稱是否存在
             current_lane = lane
+            print(f"TRUE CURRENT lANE = {current_lane}\n")
             return True
         else:
             current_lane = ""
+            print(f"FALSE CURRENT lANE = {current_lane}\n")
             return False
 
     def is_going_to_select_info(self , event):
@@ -302,9 +307,11 @@ class TocMachine(GraphMachine):
         ret , tier = check_input_tier(text)
         if ret == True: # 階級名稱是否存在
             current_tier = tier
+            print(f"TRUE CURRENT TIER = {current_tier}\n")
             return True
         else:
             current_tier = 0
+            print(f"FALSE CURRENT TIER = {current_tier}\n")
             return False
         
     def is_going_to_win_rate(self,event):
@@ -332,26 +339,34 @@ class TocMachine(GraphMachine):
         global current_lane_matchup
         text = event.message.text
         ret , lane = check_input_lane(text)
+        print("LANE : ",lane,"\n")
         if ret == True: # 位置名稱是否存在
+            print("TRUE!!!\n")
             current_lane_matchup = lane
             return True
         else:
+            print("FALSE!!!\n")
             current_lane_matchup = ""
             return False
     def is_going_to_matchup_winrate(self , event):
+        global current_name_matchup
         text = event.message.text
         if is_chinese(text) == False:                                    # 先確定輸入的是中文
+            print("TEXT : ",text,"FALSE!!!\n")
             return False
         else:
             ret = check_input_name(text)    
             if ret == False:                                             # 再確定英雄名稱是否存在   
+                print(f"FALSE!!!\n")
                 return False
             else:
-                ret2 = craw_matchup()                                    # 最後看該輸入組合是否回傳空的list
+                current_name_matchup = text
+                ret2 = crawl_matchup(current_lane_matchup , current_name_matchup)                                    # 最後看該輸入組合是否回傳空的list
+                print("RET2 : ",ret2)
+                print(f"LANE = {current_lane_matchup}",f"NAME = {current_name_matchup}")
                 return ret2                
             
 #=======================================ON ENTER=======================================
-
     def on_enter_menu(self , event):
         print("enter menu !!!\n")
         global champion_name,current_lane,current_tier,current_lane_matchup,current_name_matchup,matchup_list
@@ -375,6 +390,7 @@ class TocMachine(GraphMachine):
 
     def on_enter_input_name(self , event):
         print("enter input name !!!\n")
+        print("TEXT : ",)
         reply_token = event.reply_token
         send_text_message(reply_token, "請輸入英雄中文名稱")
         
@@ -420,7 +436,7 @@ class TocMachine(GraphMachine):
         reply_token = event.reply_token
         send_text_message(reply_token , "請輸入階級")
     
-    def on_enter_input_select_info(self , event):
+    def on_enter_select_info(self , event):
         print("enter select info !!!\n")
         reply_token = event.reply_token
         message = message_template.info
@@ -431,7 +447,8 @@ class TocMachine(GraphMachine):
     def on_enter_win_rate(self , event):
         print("enter win rate !!!\n")
         reply_token = event.reply_token
-        ret = get_win_rate(current_tier , current_lane)
+        get_win_rate(current_tier , current_lane)
+        ret = "FUCK\nFUCK\nFUCK\n"
         send_text_message(reply_token , ret)
         self.go_back()
         

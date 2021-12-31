@@ -8,6 +8,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from fsm import TocMachine
 from utils import send_text_message
+from library import dict_ch_en , create_dictionary
 
 chromedriver_autoinstaller.install()
 load_dotenv()
@@ -114,7 +115,6 @@ machine = TocMachine(
         }
         
     ],
-    
     initial="user",
     auto_transitions=False,
     show_conditions=True,
@@ -197,5 +197,6 @@ def show_fsm():
     return send_file("fsm.png", mimetype="image/png")
 
 if __name__ == "__main__":
+    create_dictionary();
     port = os.getenv("PORT", None)
     app.run(host="0.0.0.0", port=port, debug=True)
