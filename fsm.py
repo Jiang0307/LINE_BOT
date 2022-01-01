@@ -76,8 +76,9 @@ def crawl_matchup(lane , champion):
     CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
     GOOGLE_CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
     wait_time = 5
-    name = dict_ch_en[champion]
-    url = f"https://tw.op.gg/champion/{name}/statistics/{lane}/matchup"
+
+    name_en =  dict_ch_en[ dict_tw_cn[champion] ]
+    url = f"https://tw.op.gg/champion/{name_en}/statistics/{lane}/matchup"
     print(f"URL = {url}")
     option = webdriver.ChromeOptions()
     #option.binary_location = GOOGLE_CHROME_BIN
@@ -128,19 +129,19 @@ def crawl_matchup(lane , champion):
         return False
 
 def get_image_url(champion):
-    name = dict_ch_en[champion]
+    name =   dict_ch_en[dict_tw_cn[champion]]
     img_url = f"https://ddragon.leagueoflegends.com/cdn/img/champion/splash/{name}_0.jpg"
     #img = Image.open(requests.get(img_url,stream=True).raw)
     return img_url
 
 def get_opgg_url(champion):
-    name = dict_ch_en[champion]
+    name =   dict_ch_en[dict_tw_cn[champion]]
     url = f"https://tw.op.gg/champion/{name}/statistics/"
     return url
 
 def get_story_url(champion):
     base_url =  "https://universe.leagueoflegends.com/zh_TW/champion/"
-    name = dict_ch_en[champion]
+    name =   dict_ch_en[dict_tw_cn[champion]]
     result_url = base_url + name
     return result_url
 
