@@ -3,6 +3,7 @@ import sys
 import message_template
 import requests
 import re
+import bs4
 from lxml import etree
 from PIL import Image
 from pyquery import PyQuery
@@ -120,94 +121,51 @@ def get_story_url(champion):
     result_url = base_url + name
     return result_url
 
-def get_message(positions):
-    for position in positions:
-        img = position.find("td.champion-index-table__cell--value img").attr("src")
-        name = position.find("div.champion-index-table__name").text()                # 獲取英雄名稱
-        win_rate = position.find("td.champion-index-table__cell--value").text()[:6]  # 獲取勝率
-        pick_rate = position.find("td.champion-index-table__cell--value").text()[6:] # 獲取登場率
-        tier = "T"+re.match(".*r-(.*?)\.png",img).group(1)                           # 獲取src屬性並提取出優先級
-        yield{"name":name , "win_rate":win_rate , "pick_rate":pick_rate , "tier":tier}
+def get_win_rate(Tier , Lane):
+    return_message = f"{Lane}的{Tier}英雄勝率 : \n"
+    url ="https://tw.op.gg/champion/statistics"
+    header = {"User-Agent": "Chrome/70.0.3538.25" , "Accept-Language":"zh-TW,zh;q=0.9"}
+    webpage = requests.get(url, headers=header)
+    soup = BeautifulSoup(webpage.content, "html.parser")
+    attribute = f"tabItem champion-trend-tier-{Lane}"
+    for tr in soup.find(name="tbody" , attrs=attribute).children:
+        if isinstance(tr,bs4.element.Tag):
+            tds = tr('td')                                                               
+            name = tds[3].find(attrs ="champion-index-table__name").string              
+            win_rate = tds[4].string                                                    
+            pick_rate = tds[5].string                                                   
+            tier = str(tds[6])
+            tier = tier.replace('\n','')
+            tier = tier.replace('<td class="champion-index-table__cell champion-index-table__cell--value"><img alt="" src="//opgg-static.akamaized.net/images/site/champion/icon-champ','')
+            tier = tier.replace('.png"/></td>','')  
+            tier = tier.replace('tier-','T')
+            if Tier == tier:
+                temp = name + " : " + win_rate + "\n"
+                return_message += temp
+    return return_message
 
-def get_win_rate(tier , lane):
-    HEADERS = {"User-Agent":"Chrome/96.0.4664.110" , "Accept-Language":"zh-TW,zh;q=0.9"} # configurations
-    html = requests.get("http://www.op.gg/champion/statistics",headers=HEADERS).text
-    doc = PyQuery(html)
-    tier = "tr"
-    return_dict = {}
-    for information in doc("tbody").items(): # 遍歷五個tbody節點，分別代表五個位置
-        position = re.match("tabItem champion-trend-tier-(.*)",information.attr("class")).group(1) # 用regular expresion提取出tbody的class屬性的個位置
-        if lane == position:
-            for items in get_message(information.find(tier).items()): # 利用get_message函數，遍歷每一個tbody節點的tier節點
-                if items.get("tier") == "T1" == tier:
-                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
-                    return_dict[items.get("name")] = temp
-                elif items.get("tier") == "T2" == tier:
-                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
-                    return_dict[items.get("name")] = temp
-                elif items.get("tier") == "T3" == tier:
-                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
-                    return_dict[items.get("name")] = temp
-                elif items.get("tier") == "T4" == tier:
-                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
-                    return_dict[items.get("name")] = temp
-                elif items.get("tier") == "T5" == tier:
-                    temp = [ items.get("win_rate") , items.get("pick_rate") ]
-                    return_dict[items.get("name")] = temp
-    print(return_dict  )
-    # header = {"User-Agent": "Chrome/96.0.4664.110" , "Accept-Language":"zh-TW,zh;q=0.9"} # configurations
-    # html = requests.get("http://www.op.gg/champion/statistics",headers=header).text
-    # doc = PyQuery(html)
-    # tier = "tr"
-    # return_message = ""
-    # for information in doc("tbody").items(): # 遍歷五個tbody節點，分別代表五個位置
-    #     position = re.match("tabItem champion-trend-tier-(.*)",information.attr("class")).group(1) # 用regular expresion提取出tbody的class屬性的個位置
-    #     if lane == position:
-    #         for items in get_message(information.find(tier).items()): # 利用get_message函數，遍歷每一個tbody節點的tier節點
-    #             if items.get("tier") == "T1" == tier:
-    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-    #                 return_message += temp 
-    #             elif items.get("tier") == "T2" == tier:
-    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-    #                 return_message += temp
-    #             elif items.get("tier") == "T3" == tier:
-    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-    #                 return_message += temp
-    #             elif items.get("tier") == "T4" == tier:
-    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-    #                 return_message += temp
-    #             elif items.get("tier") == "T5" == tier:
-    #                 temp = str( items.get("name") ) + " : " + items.get("win_rate") + "\n"
-    #                 return_message += temp
-    # print("MESSAGE : ",return_message)
-    # #return return_message
-
-def get_pick_rate(tier , lane):
-    header = {"User-Agent":"Chrome/96.0.4664.110" , "Accept-Language":"zh-TW,zh;q=0.9"} # configurations
-    html = requests.get("http://www.op.gg/champion/statistics",headers=header).text
-    doc = PyQuery(html)
-    tier = "tr"
-    return_message = ""
-    for information in doc("tbody").items(): # 遍歷五個tbody節點，分別代表五個位置
-        position = re.match("tabItem champion-trend-tier-(.*)",information.attr("class")).group(1) # 用regular expresion提取出tbody的class屬性的個位置
-        if lane == position:
-            for items in get_message(information.find(tier).items()): # 利用get_message函數，遍歷每一個tbody節點的tier節點
-                if items.get("tier") == "T1" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("pick_rate") + "\n"
-                    return_message += temp 
-                elif items.get("tier") == "T2" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("pick_rate") + "\n"
-                    return_message += temp
-                elif items.get("tier") == "T3" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("pick_rate") + "\n"
-                    return_message += temp
-                elif items.get("tier") == "T4" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("pick_rate") + "\n"
-                    return_message += temp
-                elif items.get("tier") == "T5" == tier:
-                    temp = str( items.get("name") ) + " : " + items.get("pick_rate") + "\n"
-                    return_message += temp
-    return return_message 
+def get_pick_rate(Tier , Lane):
+    return_message = f"{Lane}的{Tier}英雄選取率 : \n"
+    url ="https://tw.op.gg/champion/statistics"
+    header = {"User-Agent": "Chrome/70.0.3538.25" , "Accept-Language":"zh-TW,zh;q=0.9"}
+    webpage = requests.get(url, headers=header)
+    soup = BeautifulSoup(webpage.content, "html.parser")
+    attribute = f"tabItem champion-trend-tier-{Lane}"
+    for tr in soup.find(name="tbody" , attrs=attribute).children:
+        if isinstance(tr,bs4.element.Tag):
+            tds = tr('td')                                                               
+            name = tds[3].find(attrs ="champion-index-table__name").string              
+            win_rate = tds[4].string                                                    
+            pick_rate = tds[5].string                                                   
+            tier = str(tds[6])
+            tier = tier.replace('\n','')
+            tier = tier.replace('<td class="champion-index-table__cell champion-index-table__cell--value"><img alt="" src="//opgg-static.akamaized.net/images/site/champion/icon-champ','')
+            tier = tier.replace('.png"/></td>','')  
+            tier = tier.replace('tier-','T')
+            if Tier == tier:
+                temp = name + " : " + pick_rate + "\n"
+                return_message += temp
+    return return_message
 
 def get_matchup_winrate():
     return_message = f"{current_name_matchup}的對位勝率 : \n"
@@ -377,7 +335,7 @@ class TocMachine(GraphMachine):
         current_name_matchup = ""
         matchup_list.clear()
         reply_token = event.reply_token
-        send_text_message(reply_token, "進入選單")
+        send_text_message(reply_token, "進入選單\n輸入\"feature\"，查詢指令")
 
     def on_enter_feature(self , event):
         print("enter feature !!!\n")
@@ -447,19 +405,20 @@ class TocMachine(GraphMachine):
     def on_enter_win_rate(self , event):
         print("enter win rate !!!\n")
         reply_token = event.reply_token
-        get_win_rate(current_tier , current_lane)
-        ret = "FUCK\nFUCK\nFUCK\n"
-        send_text_message(reply_token , ret)
+        result = get_win_rate(current_tier , current_lane)
+        print(f"LANE = {current_lane}" , f"TIER = {current_tier}")
+        send_text_message(reply_token , result)
         self.go_back()
         
     def on_enter_pick_rate(self , event):
         print("enter pick rate !!!\n")
+        print(f"LANE = {current_lane}" , f"TIER = {current_tier}")
         reply_token = event.reply_token
-        ret = get_pick_rate(current_tier , current_lane)
-        send_text_message(reply_token , ret)
+        result = get_pick_rate(current_tier , current_lane)
+        print(f"LANE = {current_lane}" , f"TIER = {current_tier}")
+        send_text_message(reply_token , result)
         self.go_back()
         
-# states = ["input_lane_matchup","input_name_matchup","matchup_winrate"]
     def on_enter_input_lane_matchup(self , event):
         print("on enter input lane matchup !!!\n")
         reply_token = event.reply_token
@@ -476,12 +435,3 @@ class TocMachine(GraphMachine):
         ret = get_matchup_winrate()
         send_text_message(reply_token , ret)
         self.go_back()
-        
-        
-    # def on_exit_state1(self):
-    #     print("Leaving state1")
-    
-    
-    
-    # def on_exit_state2(self):
-    #     print("Leaving state2")
