@@ -78,7 +78,7 @@ def crawl_matchup(lane , champion):
     url = f"https://tw.op.gg/champion/{champion}/statistics/{lane}/matchup"
     print(f"URL = {url}")
     option = webdriver.ChromeOptions()
-    option.binary_location = GOOGLE_CHROME_BIN
+    #option.binary_location = GOOGLE_CHROME_BIN
     #option.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
     option.add_argument("--headless")
     option.add_argument('--disable-gpu') #關閉GPU 避免某些系統或是網頁出錯
@@ -86,7 +86,7 @@ def crawl_matchup(lane , champion):
     option.add_argument("--no-sandbox")
     option.add_argument("--disable-dev-shm-usage")
     option.add_argument("--lang=zh-TW")
-    browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=option)
+    #browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=option)
     #browser = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=option)
 
     browser = webdriver.Chrome(chrome_options=option)
