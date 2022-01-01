@@ -37,7 +37,6 @@ def is_chinese(strs):
 def check_input_name(name):
     name.replace(' ','')
     print(name , len(name))
-
     for key,value in dict_ch_en.items():
         print(name , key , value)
         if(name == key) or (name == value):
