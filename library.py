@@ -21,11 +21,13 @@ from selenium.webdriver.common.by import By
 dict_ch_en = {}
 
 def create_dictionary():
-    header = {"User-Agent":"Chrome/96.0.4664.110" , "Accept-Language":"zh-TW,zh;q=0.9"} # configurations
+
+
+    header = {'Accept-Language': 'zh-TW'}
     opgg_url = "https://tw.op.gg/champion/statistics"
     X_PATH =  '//div[@class="champion-index__champion-list"]//div[@data-champion-name and @data-champion-key]'
     webpage = requests.get(opgg_url, headers=header)
-    soup = BeautifulSoup(webpage.content, "html.parser")
+    soup = BeautifulSoup(webpage.content, "html5lib")
     dom = etree.HTML(str(soup))
     champ_list = dom.xpath(X_PATH)
     champ_count =  len(champ_list)
