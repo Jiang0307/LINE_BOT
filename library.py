@@ -21,14 +21,15 @@ from selenium.webdriver.common.by import By
 dict_ch_en = {}
 
 def create_dictionary():
-    driver.findElementByXpath("//input[@value='cancel'][@title='cancel']").click();
-    
+    #driver.findElementByXpath("//input[@value='cancel'][@title='cancel']").click();
 
     header = {'Accept-Language': 'zh-TW'}
     opgg_url = "https://tw.op.gg/champion/statistics"
     X_PATH =  '//div[@class="champion-index__champion-list"]//div[@data-champion-name and @data-champion-key]'
-    webpage = requests.get(opgg_url, headers=header)
-    soup = BeautifulSoup(webpage.content, "html.parser")
+
+    html = urllib.request.urlopen(opgg_url).read()
+    #webpage = requests.get(opgg_url, headers=header)
+    soup = BeautifulSoup(html , "html.parser")
     dom = etree.HTML(str(soup))
     champ_list = dom.xpath(X_PATH)
     champ_count =  len(champ_list)
