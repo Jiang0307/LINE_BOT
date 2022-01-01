@@ -348,7 +348,7 @@ class TocMachine(GraphMachine):
                 print(f"FALSE 中文名稱不存在!!!\n")
                 return False
             else:
-                current_name_matchup = textheroku logs --tail -a thenotoriousmma
+                current_name_matchup = text
                 ret2 = crawl_matchup(current_lane_matchup , current_name_matchup)                                    # 最後看該輸入組合是否回傳空的list
                 print("RET2 : ",ret2)
                 if ret2 == False:
