@@ -69,7 +69,7 @@ def crawl_matchup(lane , champion):
     CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
     GOOGLE_CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
     wait_time = 5
-    url = f"https://www.op.gg/champion/{champion}/statistics/{lane}/matchup"
+    url = f"https://tw.op.gg/champion/{champion}/statistics/{lane}/matchup"
     print(f"URL = {url}")
     option = options = webdriver.ChromeOptions()
     option.binary_location = GOOGLE_CHROME_BIN
