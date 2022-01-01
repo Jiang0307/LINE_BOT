@@ -321,9 +321,12 @@ class TocMachine(GraphMachine):
                 current_name_matchup = text
                 ret2 = crawl_matchup(current_lane_matchup , current_name_matchup)                                    # 最後看該輸入組合是否回傳空的list
                 print("RET2 : ",ret2)
-                print(f"LANE = {current_lane_matchup}",f"NAME = {current_name_matchup}")
-                return ret2                
-            
+                if ret2 == False:
+                    current_name_matchup = ""
+                    print(f"LANE = {current_lane_matchup}",f"NAME = {current_name_matchup}")
+                    return False
+                else:
+                    return True            
 #=======================================ON ENTER=======================================
     def on_enter_menu(self , event):
         print("enter menu !!!\n")
