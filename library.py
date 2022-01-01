@@ -48,6 +48,7 @@ def create_dictionary():
                 dict_tw_cn[tw_key] = cn_key
 
     for key , value in dict_tw_en.items():
+        value = value.lower()
         dict_en_tw[value] = key
 
     for key , value in dict_tw_cn.items():

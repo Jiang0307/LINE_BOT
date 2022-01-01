@@ -195,6 +195,7 @@ def get_pick_rate(Tier , Lane):
 def get_matchup_winrate():
     return_message = f"{current_name_matchup}的對位勝率 : \n"
     for name_en , win_rate in matchup_list:
+        name_en = name_en.lower()
         name_tw = dict_en_tw[name_en]
         temp = name_tw + " : " + win_rate + "\n"
         return_message += temp
