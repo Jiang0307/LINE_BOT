@@ -104,8 +104,8 @@ def crawl_matchup(lane , champion):
     except:
         Buttons = browser.find_elements(By.XPATH,"//div[@class='champion-matchup-list__champion']//span[1]")
     for button in Buttons:
-        # if count >= 15:
-        #     break
+        if count >= 20:
+            break
         browser.execute_script("arguments[0].click();", button)
         wait = ui.WebDriverWait(browser, wait_time)
         try:
@@ -197,6 +197,8 @@ def get_matchup_winrate():
     for name_en , win_rate in matchup_list:
         name_en = name_en.lower()
         name_en = name_en.replace(' ','')
+        if name_en == "nunu&willump":
+            name_en = "nunu"
         name_tw = dict_en_tw[name_en]
         temp = name_tw + " : " + win_rate + "\n"
         return_message += temp
