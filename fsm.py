@@ -245,13 +245,12 @@ class TocMachine(GraphMachine):
                 print("FALSE!!!\n")
                 champion_name = ""            
                 return False
-            else:        
-                return False
+        else:        
+            return False
 
     def is_going_to_send_image(self , event):
         text = event.message.text
         if is_chinese(text) == True:
-            
             return text == "下載圖片"
         else:        
             return text.lower() == "download"
