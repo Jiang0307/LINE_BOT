@@ -19,7 +19,7 @@ from selenium.webdriver.support import ui
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from utils import send_text_message , send_image_message
-from library import dict_ch_en , create_dictionary
+from library import dict_ch_en , dict_zh_en , dict_tw_en ,create_dictionary
 
 champion_name = ""
 current_lane = ""
@@ -36,12 +36,12 @@ def is_chinese(strs):
   
 def check_input_name(name):
     name.replace(' ','')
-    print(name , len(name))
-    for key,value in dict_ch_en.items():
-        print(name , key , value)
-        if(name == key) or (name == value):
+    converted = dict_tw_cn[name]
+    print(converted , len(converted))
+    for key,value in dict_tw_cn.items():
+        print(converted , key , value)
+        if(converted == key) or (converted == value):
             return True
-
     return False
 
 def check_input_lane(position):
