@@ -72,6 +72,7 @@ def check_input_tier(tier):
 
 def crawl_matchup(lane , champion):
     global matchup_list
+    count = 0
     CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
     GOOGLE_CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
     wait_time = 5
@@ -103,6 +104,8 @@ def crawl_matchup(lane , champion):
     except:
         Buttons = browser.find_elements(By.XPATH,"//div[@class='champion-matchup-list__champion']//span[1]")
     for button in Buttons:
+        if count > 25:
+            break
         browser.execute_script("arguments[0].click();", button)
         wait = ui.WebDriverWait(browser, wait_time)
         try:
@@ -113,8 +116,9 @@ def crawl_matchup(lane , champion):
             col = browser.find_elements(By.XPATH,"//table[@class='champion-matchup-table']//td[1]")
         win_rate = col[index].text
         matchup_list.append( [button.text , win_rate] )
-    #matchup_list.sort(key = lambda x: x[1])
-    #matchup_list.reverse()
+        count += 1
+    matchup_list.sort(key = lambda x: x[1])
+    matchup_list.reverse()
         print(f"champ : {button.text} wr:{win_rate}")
     browser.close()
     
