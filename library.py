@@ -27,8 +27,8 @@ def create_dictionary():
     header = {'Accept-Language': 'zh-TW'}
     opgg_url = "https://tw.op.gg/champion/statistics"
     X_PATH =  '//div[@class="champion-index__champion-list"]//div[@data-champion-name and @data-champion-key]'
-
-    html = urllib3.request.urlopen(opgg_url).read()
+    r = requests.get(opgg_url)
+    html = r.text
     #webpage = requests.get(opgg_url, headers=header)
     soup = BeautifulSoup(html , "html.parser")
     dom = etree.HTML(str(soup))
