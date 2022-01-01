@@ -235,20 +235,19 @@ class TocMachine(GraphMachine):
         global champion_name
         text = event.message.text
         text.replace(' ','')
-        #if is_chinese(text) == True:
-        ret = check_input_name(text)    # 英雄名稱是否存在
-        if ret == True:
-            print("TRUE!!!\n")
-            champion_name = text
-            return True
-        else:
-            print("FALSE!!!\n")
-            champion_name = ""            
-            return False
-        # else:        
-        #     return False
-        
-    
+        if is_chinese(text) == True:
+            ret = check_input_name(text)    # 英雄名稱是否存在
+            if ret == True:
+                print("TRUE!!!\n")
+                champion_name = text
+                return True
+            else:
+                print("FALSE!!!\n")
+                champion_name = ""            
+                return False
+            else:        
+                return False
+
     def is_going_to_send_image(self , event):
         text = event.message.text
         if is_chinese(text) == True:
@@ -350,7 +349,7 @@ class TocMachine(GraphMachine):
                 print(f"FALSE 中文名稱不存在!!!\n")
                 return False
             else:
-                current_name_matchup = text
+                current_name_matchup = textheroku logs --tail -a thenotoriousmma
                 ret2 = crawl_matchup(current_lane_matchup , current_name_matchup)                                    # 最後看該輸入組合是否回傳空的list
                 print("RET2 : ",ret2)
                 if ret2 == False:
