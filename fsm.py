@@ -113,8 +113,9 @@ def crawl_matchup(lane , champion):
             col = browser.find_elements(By.XPATH,"//table[@class='champion-matchup-table']//td[1]")
         win_rate = col[index].text
         matchup_list.append( [button.text , win_rate] )
-        matchup_list.sort(key = lambda x: x[1])
-        matchup_list.reverse()
+    #matchup_list.sort(key = lambda x: x[1])
+    #matchup_list.reverse()
+        print(f"champ : {button.text} wr:{win_rate}")
     browser.close()
     
     if matchup_list:
