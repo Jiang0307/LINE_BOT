@@ -221,18 +221,19 @@ class TocMachine(GraphMachine):
     def is_going_to_select_service(self , event):
         global champion_name
         text = event.message.text
-        print(text)
-        if is_chinese(text) == True:
-            ret = check_input_name(text)    # 英雄名稱是否存在
-            if ret == True:
-                print("TRUE!!!\n")
-                champion_name = text
-            else:
-                print("FALSE!!!\n")
-                champion_name = ""            
-            return ret
-        else:        
+        text.replace(' ','')
+        #if is_chinese(text) == True:
+        ret = check_input_name(text)    # 英雄名稱是否存在
+        if ret == True:
+            print("TRUE!!!\n")
+            champion_name = text
+            return True
+        else:
+            print("FALSE!!!\n")
+            champion_name = ""            
             return False
+        # else:        
+        #     return False
         
     
     def is_going_to_send_image(self , event):
