@@ -42,9 +42,9 @@ def check_input_name(name):
 def check_input_lane(position):
     if (position=="上") or (position=="上路") or (position=="上單") or (position=="TOP") or (position=="top") or (position=="Top"):
         return True , "TOP"
-    elif (position=="野") or (position=="打野") or (position=="JG") or (position=="JUNGLE") or (position=="jungle") or (position=="Jungle"):
+    elif (position=="野") or (position=="打野") or (position=="JG") or (position=="jg") or (position=="JUNGLE") or (position=="jungle") or (position=="Jungle"):
         return True , "JUNGLE"
-    elif (position=="中") or (position=="中路") or (position=="中單") or (position=="MID") or (position=="mid") or (position=="Mid") or (position=="MIDDLE") or (position=="middle") or (position=="Middle") or (position=="AP") or (position=="ap"):
+    elif (position=="中") or (position=="中路") or (position=="中單") or (position=="MID") or (position=="mid") or (position=="Mid") or (position=="MIDDLE") or (position=="middle") or (position=="Middle") or (position=="AP") or (position=="ap") or (position=="Ap") :
         return True , "MID"
     elif (position=="下") or (position=="下路") or (position=="ADC") or (position=="adc") or (position=="Adc") or (position=="AD") or (position=="ad") or (position=="Ad"):
         return True , "ADC"
@@ -78,6 +78,8 @@ def crawl_matchup(lane , champion):
     browser.implicitly_wait(10)
     wait = ui.WebDriverWait(browser, wait_time)
     matchup_list.clear()
+    index_dict = {"TOP":5,"JUNGLE":3,"MID":5,"ADC":5,"SUPPORT":3}
+    index = index_dict[lane]
     try:
         wait.until(lambda driver: driver.find_elements(By.XPATH,"//div[@class='champion-matchup-list__champion']//span[1]"))
         Buttons = browser.find_elements(By.XPATH,"//div[@class='champion-matchup-list__champion']//span[1]")
@@ -92,7 +94,7 @@ def crawl_matchup(lane , champion):
         except:
             browser.execute_script("arguments[0].click();", button)
             col = browser.find_elements(By.XPATH,"//table[@class='champion-matchup-table']//td[1]")
-        win_rate = col[5].text
+        win_rate = col[index].text
         matchup_list.append( [button.text , win_rate] )
         matchup_list.sort(key = lambda x: x[1])
         matchup_list.reverse()
@@ -223,21 +225,21 @@ class TocMachine(GraphMachine):
             
             return text == "下載圖片"
         else:        
-            return text.lower() == "download image"
+            return text.lower() == "download"
         
     def is_going_to_opgg_url(self , event):
         text = event.message.text
         if is_chinese(text) == True:
             return text == "英雄數據"
         else:
-            return text.lower() == "champion statistics"
+            return text.lower() == "statistics"
 
     def is_going_to_story_url(self , event):
         text = event.message.text
         if is_chinese(text) == True:
             return text == "英雄故事"
         else:
-            return text.lower() == "champion story"
+            return text.lower() == "story"
 
     def is_going_to_input_lane(self , event):
         text = event.message.text
@@ -289,7 +291,7 @@ class TocMachine(GraphMachine):
     def is_going_to_input_lane_matchup(self , event):
         text = event.message.text
         if is_chinese(text) == True:
-            return text == "依照對抗查詢"
+            return text == "依照對位查詢"
         else:
             return text.lower() == "search by matchup"
 
