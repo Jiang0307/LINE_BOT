@@ -40,9 +40,12 @@ def create_dictionary():
         #dict_en_ch[english] = chinese
     dict_ch_en["铸星龙王"]="AurelionSol";dict_ch_en["祖安狂人"]="DrMundo";dict_ch_en["深渊巨口"]="KogMaw";dict_ch_en["盲僧"]="LeeSin";dict_ch_en["无极剑圣"]="MasterYi";dict_ch_en["赏金猎人"]="MissFortune";dict_ch_en["虚空遁地兽"]="RekSai";dict_ch_en["河流之王"]="TahmKench";dict_ch_en["卡牌大师"]="TwistedFate";dict_ch_en["德邦总管"]="XinZhao";
     print(dict_ch_en)    
-
     print(len(dict_ch_en) , len(dict_zh_tw))
 
+    for tw_key, tw_value in dict_zh_tw.items():
+        for cn_key , cn_value in dict_ch_en.items():
+            if(cn_value == tw_value):
+                dict_tw_cn[tw_key] = cn_key
 
-
+    print(dict_tw_cn)
     return

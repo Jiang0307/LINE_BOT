@@ -104,7 +104,7 @@ def crawl_matchup(lane , champion):
     except:
         Buttons = browser.find_elements(By.XPATH,"//div[@class='champion-matchup-list__champion']//span[1]")
     for button in Buttons:
-        if count > 25:
+        if count >= 10:
             break
         browser.execute_script("arguments[0].click();", button)
         wait = ui.WebDriverWait(browser, wait_time)
