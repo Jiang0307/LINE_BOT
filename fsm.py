@@ -71,6 +71,7 @@ def check_input_tier(tier):
     return False , None
 
 def crawl_matchup(lane , champion):
+    global matchup_list
     CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
     GOOGLE_CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
     wait_time = 5
@@ -452,7 +453,8 @@ class TocMachine(GraphMachine):
         send_text_message(reply_token, "請輸入英雄中文名稱")
         
     def on_enter_matchup_winrate(self , event):
-        print("enter matchup winrate !!!\n")
+        global matchup_list
+        print(f"enter matchup winrate !!! LENGTH = {len(matchup_list)}\n")
         reply_token = event.reply_token
         ret = get_matchup_winrate()
         send_text_message(reply_token , ret)
