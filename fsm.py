@@ -75,7 +75,7 @@ def crawl_matchup(lane , champion):
     count = 0
     CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
     GOOGLE_CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
-    wait_time = 1
+    wait_time = 0
     name_en =  dict_cn_en[ dict_tw_cn[champion] ]
     url = f"https://tw.op.gg/champion/{name_en}/statistics/{lane}/matchup"
     print(f"URL = {url}")
@@ -93,7 +93,7 @@ def crawl_matchup(lane , champion):
 
     browser = webdriver.Chrome(chrome_options=option)
     browser.get(url)
-    browser.implicitly_wait(10)
+    browser.implicitly_wait(1)
     wait = ui.WebDriverWait(browser, wait_time)
     matchup_list.clear()
     index_dict = {"TOP":5,"JUNGLE":3,"MID":5,"ADC":5,"SUPPORT":3}
@@ -104,8 +104,8 @@ def crawl_matchup(lane , champion):
     except:
         Buttons = browser.find_elements(By.XPATH,"//div[@class='champion-matchup-list__champion']//span[1]")
     for button in Buttons:
-        if count >= 15:
-            break
+        # if count >= 15:
+        #     break
         browser.execute_script("arguments[0].click();", button)
         wait = ui.WebDriverWait(browser, wait_time)
         try:
