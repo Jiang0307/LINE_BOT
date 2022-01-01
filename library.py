@@ -36,4 +36,5 @@ def create_dictionary():
         dict_ch_en[chinese] = english
         #dict_en_ch[english] = chinese
     dict_ch_en["翱銳龍獸"]="AurelionSol";dict_ch_en["蒙多醫生"]="DrMundo";dict_ch_en["寇格魔"]="KogMaw";dict_ch_en["李星"]="LeeSin";dict_ch_en["易大師"]="MasterYi";dict_ch_en["好運姐"]="MissFortune";dict_ch_en["雷珂煞"]="RekSai";dict_ch_en["貪啃奇"]="TahmKench";dict_ch_en["逆命"]="TwistedFate";dict_ch_en["趙信"]="XinZhao";
+    print(dict_ch_en)
     return

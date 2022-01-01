@@ -318,13 +318,13 @@ class TocMachine(GraphMachine):
     def is_going_to_matchup_winrate(self , event):
         global current_name_matchup
         text = event.message.text
-        if is_chinese(text) == False:                                    # 先確定輸入的是中文
+        if is_chinese(text) == False:                                   # 先確定輸入的是中文
             print("TEXT : ",text,"FALSE!!!\n")
             return False
         else:
             ret = check_input_name(text)    
             if ret == False:                                             # 再確定英雄名稱是否存在   
-                print(f"FALSE!!!\n")
+                print(f"FALSE 中文名稱不存在!!!\n")
                 return False
             else:
                 current_name_matchup = text
