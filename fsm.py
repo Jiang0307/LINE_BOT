@@ -66,14 +66,20 @@ def check_input_tier(tier):
     return False , None
 
 def crawl_matchup(lane , champion):
+    CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
+    GOOGLE_CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
     wait_time = 5
     url = f"https://www.op.gg/champion/{champion}/statistics/{lane}/matchup"
     print(f"URL = {url}")
-    option = Options()
+    option = options = webdriver.ChromeOptions()
+    option.binary_location = GOOGLE_CHROME_BIN
     option.add_argument("--headless")
     option.add_argument('--disable-gpu') #關閉GPU 避免某些系統或是網頁出錯
-    option.add_argument("--log-level=3");
-    browser = webdriver.Chrome(options=option)
+    option.add_argument("--log-level=3")
+    option.add_argument("--no-sandbox")
+    option.add_argument("--disable-dev-shm-usage")
+    browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=option)
+    #browser = webdriver.Chrome(options=option)
     browser.get(url)
     browser.implicitly_wait(10)
     wait = ui.WebDriverWait(browser, wait_time)
