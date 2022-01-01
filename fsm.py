@@ -117,11 +117,10 @@ def crawl_matchup(lane , champion):
         win_rate = col[index].text
         matchup_list.append( [button.text , win_rate] )
         count += 1
-    matchup_list.sort(key = lambda x: x[1])
-    matchup_list.reverse()
         print(f"champ : {button.text} wr:{win_rate}")
     browser.close()
-    
+    matchup_list.sort(key = lambda x: x[1])
+    matchup_list.reverse()
     if matchup_list:
         return True
     else:
