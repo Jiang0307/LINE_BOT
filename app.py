@@ -197,7 +197,7 @@ def show_fsm():
     return send_file("fsm.png", mimetype="image/png")
 
 if __name__ == "__main__":
-    machine.get_graph().draw("fsm.png", prog="dot", format="png")
+    #machine.get_graph().draw("fsm.png", prog="dot", format="png")
     create_dictionary();
     port = os.getenv("PORT", None)
     app.run(host="0.0.0.0", port=port, debug=True)
