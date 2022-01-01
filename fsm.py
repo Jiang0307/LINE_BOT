@@ -19,7 +19,7 @@ from selenium.webdriver.support import ui
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from utils import send_text_message , send_image_message
-from library import dict_ch_en , dict_tw_en , dict_tw_cn ,create_dictionary
+from library import dict_cn_en , dict_tw_en , dict_tw_cn , dict_cn_tw , dict_en_tw , create_dictionary
 
 champion_name = ""
 current_lane = ""
@@ -75,9 +75,8 @@ def crawl_matchup(lane , champion):
     count = 0
     CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
     GOOGLE_CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
-    wait_time = 5
-
-    name_en =  dict_ch_en[ dict_tw_cn[champion] ]
+    wait_time = 3
+    name_en =  dict_cn_en[ dict_tw_cn[champion] ]
     url = f"https://tw.op.gg/champion/{name_en}/statistics/{lane}/matchup"
     print(f"URL = {url}")
     option = webdriver.ChromeOptions()
@@ -105,7 +104,7 @@ def crawl_matchup(lane , champion):
     except:
         Buttons = browser.find_elements(By.XPATH,"//div[@class='champion-matchup-list__champion']//span[1]")
     for button in Buttons:
-        if count >= 10:
+        if count >= 15:
             break
         browser.execute_script("arguments[0].click();", button)
         wait = ui.WebDriverWait(browser, wait_time)
@@ -129,19 +128,19 @@ def crawl_matchup(lane , champion):
         return False
 
 def get_image_url(champion):
-    name =   dict_ch_en[dict_tw_cn[champion]]
+    name =   dict_cn_en[dict_tw_cn[champion]]
     img_url = f"https://ddragon.leagueoflegends.com/cdn/img/champion/splash/{name}_0.jpg"
     #img = Image.open(requests.get(img_url,stream=True).raw)
     return img_url
 
 def get_opgg_url(champion):
-    name =   dict_ch_en[dict_tw_cn[champion]]
+    name =   dict_cn_en[dict_tw_cn[champion]]
     url = f"https://tw.op.gg/champion/{name}/statistics/"
     return url
 
 def get_story_url(champion):
     base_url =  "https://universe.leagueoflegends.com/zh_TW/champion/"
-    name =   dict_ch_en[dict_tw_cn[champion]]
+    name =   dict_cn_en[dict_tw_cn[champion]]
     result_url = base_url + name
     return result_url
 
@@ -155,7 +154,7 @@ def get_win_rate(Tier , Lane):
     for tr in soup.find(name="tbody" , attrs=attribute).children:
         if isinstance(tr,bs4.element.Tag):
             tds = tr('td')                                                               
-            name = tds[3].find(attrs ="champion-index-table__name").string              
+            name_cn = tds[3].find(attrs ="champion-index-table__name").string              
             win_rate = tds[4].string                                                    
             pick_rate = tds[5].string                                                   
             tier = str(tds[6])
@@ -164,7 +163,8 @@ def get_win_rate(Tier , Lane):
             tier = tier.replace('.png"/></td>','')  
             tier = tier.replace('tier-','T')
             if Tier == tier:
-                temp = name + " : " + win_rate + "\n"
+                name_tw = dict_cn_tw[name_cn]
+                temp = name_tw + " : " + win_rate + "\n"
                 return_message += temp
     return return_message
 
@@ -178,7 +178,7 @@ def get_pick_rate(Tier , Lane):
     for tr in soup.find(name="tbody" , attrs=attribute).children:
         if isinstance(tr,bs4.element.Tag):
             tds = tr('td')                                                               
-            name = tds[3].find(attrs ="champion-index-table__name").string              
+            name_cn = tds[3].find(attrs ="champion-index-table__name").string              
             win_rate = tds[4].string                                                    
             pick_rate = tds[5].string                                                   
             tier = str(tds[6])
@@ -187,15 +187,18 @@ def get_pick_rate(Tier , Lane):
             tier = tier.replace('.png"/></td>','')  
             tier = tier.replace('tier-','T')
             if Tier == tier:
-                temp = name + " : " + pick_rate + "\n"
+                name_tw = dict_cn_tw[name_cn]
+                temp = name_tw + " : " + pick_rate + "\n"
                 return_message += temp
     return return_message
 
 def get_matchup_winrate():
     return_message = f"{current_name_matchup}的對位勝率 : \n"
-    for name , win_rate in matchup_list:
-       temp = name + " : " + win_rate + "\n"
-       return_message += temp
+    for name_en , win_rate in matchup_list:
+        name_tw = dict_en_tw[name_en]
+        temp = name_tw + " : " + win_rate + "\n"
+        return_message += temp
+
     return return_message
 
 create_dictionary()
