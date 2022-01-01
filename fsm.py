@@ -75,7 +75,7 @@ def crawl_matchup(lane , champion):
     count = 0
     CHROMEDRIVER_PATH = "/app/.chromedriver/bin/chromedriver"
     GOOGLE_CHROME_BIN = "/app/.apt/usr/bin/google-chrome"
-    wait_time = 3
+    wait_time = 1
     name_en =  dict_cn_en[ dict_tw_cn[champion] ]
     url = f"https://tw.op.gg/champion/{name_en}/statistics/{lane}/matchup"
     print(f"URL = {url}")
@@ -196,6 +196,7 @@ def get_matchup_winrate():
     return_message = f"{current_name_matchup}的對位勝率 : \n"
     for name_en , win_rate in matchup_list:
         name_en = name_en.lower()
+        name_en.replace(" ","")
         name_tw = dict_en_tw[name_en]
         temp = name_tw + " : " + win_rate + "\n"
         return_message += temp
