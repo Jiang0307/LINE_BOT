@@ -49,7 +49,7 @@ def create_dictionary():
 
     for key , value in dict_tw_en.items():
         value = value.lower()
-        value.replace(" ","")
+        value = value.replace(' ','')
         dict_en_tw[value] = key
 
     for key , value in dict_tw_cn.items():
@@ -60,8 +60,6 @@ def create_dictionary():
     print(len(dict_cn_tw))
     print(len(dict_tw_en))
     print(len(dict_en_tw))
-
     print(dict_tw_cn)
     print(dict_cn_en)    
-
     return
