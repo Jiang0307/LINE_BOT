@@ -37,8 +37,12 @@ def is_chinese(strs):
 def check_input_name(name):
     name.replace(' ','')
     print(name , len(name))
-    if (name in dict_ch_en.keys() ) or (name in dict_ch_en.values() ):
-        return True
+
+    for key,value in dict_ch_en.items():
+        print(name , key , value)
+        if(name == key) or (name == value):
+            return True
+
     return False
 
 def check_input_lane(position):
@@ -73,8 +77,9 @@ def crawl_matchup(lane , champion):
     wait_time = 5
     url = f"https://tw.op.gg/champion/{champion}/statistics/{lane}/matchup"
     print(f"URL = {url}")
-    option = options = webdriver.ChromeOptions()
+    option = webdriver.ChromeOptions()
     option.binary_location = GOOGLE_CHROME_BIN
+    #option.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
     option.add_argument("--headless")
     option.add_argument('--disable-gpu') #關閉GPU 避免某些系統或是網頁出錯
     option.add_argument("--log-level=3")
@@ -82,7 +87,9 @@ def crawl_matchup(lane , champion):
     option.add_argument("--disable-dev-shm-usage")
     option.add_argument("--lang=zh-TW")
     browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=option)
-    #browser = webdriver.Chrome(options=option)
+    #browser = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=option)
+
+    browser = webdriver.Chrome(chrome_options=option)
     browser.get(url)
     browser.implicitly_wait(10)
     wait = ui.WebDriverWait(browser, wait_time)
