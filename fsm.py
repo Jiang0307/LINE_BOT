@@ -36,8 +36,8 @@ def is_chinese(strs):
   
 def check_input_name(name):
     name.replace(' ','')
-    print(name)
-    if name in dict_ch_en.keys():
+    print(name , len(name))
+    if (name in dict_ch_en.keys() ) or (name in dict_ch_en.values() ):
         return True
     return False
 
@@ -324,7 +324,7 @@ class TocMachine(GraphMachine):
             print("TEXT : ",text,"FALSE!!!\n")
             return False
         else:
-            ret = check_input_name(text)    
+            ret = check_input_name(text)   
             if ret == False:                                             # 再確定英雄名稱是否存在   
                 print(f"FALSE 中文名稱不存在!!!\n")
                 return False
