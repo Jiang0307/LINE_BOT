@@ -7,6 +7,7 @@ from lxml import etree
 from PIL import Image
 from pyquery import PyQuery
 from flask import Flask, jsonify, request, abort, send_file
+import urllib3
 from dotenv import load_dotenv
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError
@@ -27,7 +28,7 @@ def create_dictionary():
     opgg_url = "https://tw.op.gg/champion/statistics"
     X_PATH =  '//div[@class="champion-index__champion-list"]//div[@data-champion-name and @data-champion-key]'
 
-    html = urllib.request.urlopen(opgg_url).read()
+    html = urllib3.request.urlopen(opgg_url).read()
     #webpage = requests.get(opgg_url, headers=header)
     soup = BeautifulSoup(html , "html.parser")
     dom = etree.HTML(str(soup))
