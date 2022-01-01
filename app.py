@@ -8,7 +8,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from fsm import TocMachine
 from utils import send_text_message
-from library import dict_ch_en , create_dictionary
+from library import dict_ch_en , dict_tw_en , dict_tw_cn ,create_dictionary
 
 chromedriver_autoinstaller.install()
 load_dotenv()
