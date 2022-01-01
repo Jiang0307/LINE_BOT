@@ -78,6 +78,7 @@ def crawl_matchup(lane , champion):
     option.add_argument("--log-level=3")
     option.add_argument("--no-sandbox")
     option.add_argument("--disable-dev-shm-usage")
+    option.add_argument("--lang=zh-TW")
     browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=option)
     #browser = webdriver.Chrome(options=option)
     browser.get(url)
@@ -120,7 +121,7 @@ def get_image_url(champion):
 
 def get_opgg_url(champion):
     name = dict_ch_en[champion]
-    url = f"https://www.op.gg/champion/{name}/statistics/"
+    url = f"https://tw.op.gg/champion/{name}/statistics/"
     return url
 
 def get_story_url(champion):
@@ -307,11 +308,11 @@ class TocMachine(GraphMachine):
         ret , lane = check_input_lane(text)
         print("LANE : ",lane,"\n")
         if ret == True: # 位置名稱是否存在
-            print("TRUE!!!\n")
+            print("位置名稱 TRUE!!!\n")
             current_lane_matchup = lane
             return True
         else:
-            print("FALSE!!!\n")
+            print("位置名稱 FALSE!!!\n")
             current_lane_matchup = ""
             return False
     def is_going_to_matchup_winrate(self , event):
