@@ -7,13 +7,5 @@
 ## QR code
 ![fsm](./img/QR_code.png)
 
-## Setup
-
-### Prerequisite
-* Python 3.6
-* Pipenv
-* Facebook Page and App
-* HTTPS Server
-
 ## Finite State Machine
 ![fsm](./img/fsm.png)
